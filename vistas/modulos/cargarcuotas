@@ -1,0 +1,10 @@
+
+
+<?php
+
+ $fechaInicial = null;
+            $fechaFinal = null;
+
+          }
+
+          $respuesta = ControladorVentas::ctrRangoFechasVentas2($fechaInicial, $fechaFinal);
