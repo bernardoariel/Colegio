@@ -67,6 +67,7 @@ class AjaxCrearVenta{
 	=============================================*/	
 	public function ajaxSinHomologacion(){
 
+		
 		$fecha = date("Y-m-d");
 
 		if ($_POST["listaMetodoPago"]=="CTA.CORRIENTE"){

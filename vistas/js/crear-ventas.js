@@ -451,28 +451,43 @@ FACTURA ELECTRONICA
 =============================================*/
 $("#guardarVenta").on("click",function(){
     
-    $("#guardarVenta").attr('disabled','disabled');
-   
-    var idUltimaFactura=0;
-    var codigoUltimaFactura=0;
-    var datos = new FormData();
-    datos.append("nuevaVenta", $('#nuevaVenta').val());
-    datos.append("idVendedor", $('#idVendedor').val());
-    datos.append("nombreCliente",$("#nombreCliente").val());
-    datos.append("documentoCliente",$("#documentoCliente").val());
-    datos.append("tipoDocumento",$("#tipoDocumento").val());
-    datos.append("tipoCliente",$("#tipoCliente").val());
-    datos.append("seleccionarCliente", $('#seleccionarCliente').val());
-    datos.append("listaMetodoPago", $('#listaMetodoPago').val());
-    datos.append("nuevaReferencia", $('#nuevaReferencia').val());
-    datos.append("totalVenta", $('#totalVenta').val());
-    datos.append("listaProductos", $('#listaProductos').val());
-    datos.append("nuevoPrecioImpuesto", $('#nuevoPrecioImpuesto').val());
-    datos.append("nuevoPrecioNeto", $('#nuevoPrecioNeto').val());
-    datos.append("nuevoTotalVentas", $('#nuevoTotalVentas').val());
-    
-
-     $.ajax({
+  $("#guardarVenta").attr('disabled','disabled');
+ 
+  var idUltimaFactura=0;
+  var codigoUltimaFactura=0;
+  var datos = new FormData();
+  datos.append("sinHomologacion",1 );
+  datos.append("listaProductos", $('#listaProductos').val());
+  datos.append("idVendedor", $('#idVendedor').val());
+  datos.append("nombreCliente",$("#nombreCliente").val());
+  datos.append("seleccionarCliente", $('#seleccionarCliente').val());
+  datos.append("documentoCliente",$("#documentoCliente").val());
+  datos.append("tipoCliente",$("#tipoCliente").val());
+  datos.append("tipoDocumento",$("#tipoDocumento").val());
+  
+  datos.append("listaMetodoPago", $('#listaMetodoPago').val());
+  datos.append("nuevaReferencia", $('#nuevaReferencia').val());
+  datos.append("totalVenta", $('#totalVenta').val());
+  datos.append("nuevoPrecioImpuesto", $('#nuevoPrecioImpuesto').val());
+  datos.append("nuevoPrecioNeto", $('#nuevoPrecioNeto').val());
+  datos.append("nuevoTotalVentas", $('#nuevoTotalVentas').val());
+  
+  //CREAMOS LA FACTURA
+  $.ajax({
+    url:"ajax/crearventa.ajax.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+     
+    success:function(respuestaSinHomologacion){
+      console.log("respuestaSinHomologacion", respuestaSinHomologacion);
+        
+      ultimaFactura = 'ultimaFactura';
+      var datos = new FormData();
+      datos.append("ultimaFactura",ultimaFactura);
+      $.ajax({
 
         url:"ajax/crearventa.ajax.php",
         method: "POST",
@@ -480,179 +495,26 @@ $("#guardarVenta").on("click",function(){
         cache: false,
         contentType: false,
         processData: false,
-        
-        beforeSend: function(){
-            $('#modalLoader').modal('show');
-        },
-        success:function(respuesta){
-          var respuestaFinal = respuesta;
-          console.log("respuesta", respuesta);
-
-          sinComunicacion="No pudimos comunicarnos con AFIP: Could not connect to host";
-          comprobanteRechazado="El comprobante fue rechazado, controle los datos del cliente.";
-          problema="existe algun problema . consulte al programador";
-          respuestaCortada=respuesta.substring(0, 2);
-          console.log("respuestaCortadddd", respuestaCortada);
+        dataType:"json",
           
-          var strWindowFeatures = " toolbar=no,location=no,directories=no,status=no,menubar=no,titlebar=no,scrollbars=no,resizable=no,width=600,height=600,left=15,top=15";
-          switch(respuestaCortada) {
-            // FACTURA ELECTRONICA
-            case 'FE':
-                ultimaFactura = 'ultimaFactura';
-                var datos = new FormData();
-                datos.append("ultimaFactura",ultimaFactura);
-                $.ajax({
-
-                  url:"ajax/crearventa.ajax.php",
-                  method: "POST",
-                  data: datos,
-                  cache: false,
-                  contentType: false,
-                  processData: false,
-                  dataType:"json",
-                  success:function(respuestaUltimaFactura){
-                    console.log("respuestaUltimaFactura", respuestaUltimaFactura);
-                    idUltimaFactura=respuestaUltimaFactura["id"];
-                    console.log("idUltimaFactura", idUltimaFactura);
-                    codigoUltimaFactura=respuestaUltimaFactura["codigo"];
-                    console.log("codigoUltimaFactura", codigoUltimaFactura);
-                    window.open("extensiones/fpdf/pdf/facturaElectronica.php?id="+idUltimaFactura ,"FACTURA",strWindowFeatures);
-                    $('#modalLoader').modal('hide');
-                    window.location = "ventas";
-                    }  
-                  })
-                break;
-              
-              // NO HAY COMUNICACION 
-              case 'ER':
-                      
-                var datos = new FormData();
-                datos.append("sinHomologacion",1 );
-                datos.append("listaProductos", $('#listaProductos').val());
-                datos.append("idVendedor", $('#idVendedor').val());
-                datos.append("nombreCliente",$("#nombreCliente").val());
-                datos.append("documentoCliente",$("#documentoCliente").val());
-                datos.append("tipoCliente",$("#tipoCliente").val());
-                datos.append("tipoDocumento",$("#tipoDocumento").val());
-                datos.append("seleccionarCliente", $('#seleccionarCliente').val());
-                datos.append("listaMetodoPago", $('#listaMetodoPago').val());
-                datos.append("nuevaReferencia", $('#nuevaReferencia').val());
-                datos.append("totalVenta", $('#totalVenta').val());
-                datos.append("nuevoPrecioImpuesto", $('#nuevoPrecioImpuesto').val());
-                datos.append("nuevoPrecioNeto", $('#nuevoPrecioNeto').val());
-                datos.append("nuevoTotalVentas", $('#nuevoTotalVentas').val());
-
-                $.ajax({
-                      url:"ajax/crearventa.ajax.php",
-                      method: "POST",
-                      data: datos,
-                      cache: false,
-                      contentType: false,
-                      processData: false,
-                     
-                      success:function(respuestaSinHomologacion){
-                        console.log("respuestaSinHomologacion", respuestaSinHomologacion);
-                        
-                        ultimaFactura = 'ultimaFactura';
-                        var datos = new FormData();
-                        datos.append("ultimaFactura",ultimaFactura);
-                        $.ajax({
-
-                          url:"ajax/crearventa.ajax.php",
-                          method: "POST",
-                          data: datos,
-                          cache: false,
-                          contentType: false,
-                          processData: false,
-                          dataType:"json",
-                          
-                          success:function(respuestaUltimaFactura){
-                            // console.log("respuestaUltimaFactura", respuestaUltimaFactura);
-                            idUltimaFactura=respuestaUltimaFactura["id"];
-                            // console.log("idUltimaFactura", idUltimaFactura);
-                            codigoUltimaFactura=respuestaUltimaFactura["codigo"];
-                            // console.log("codigoUltimaFactura", codigoUltimaFactura);
-                            
-                            $('#modalLoader').modal('hide');
-                            
-                            swal({
-                                type: "warning",
-                                title: "ERROR",
-                                text: respuesta,
-                                showConfirmButton: true,
-                                confirmButtonText: "Cerrar"
-                                }).then(function(result){
-                                    if (result.value) {
-
-                                    window.open("extensiones/tcpdf/pdf/factura.php?id="+idUltimaFactura ,"FACTURA",strWindowFeatures);
-                                    window.location = "ventas";
-                                    
-                                    }
-                            })
-                           
-                          } 
-
-                        })
-                        
-                      }
-
-                })
-                
-              
-                break;
-                case 'RE':
-
-                  ultimoRemito = 'ultimoRemito';
-                  var datos = new FormData();
-                  datos.append("ultimoRemito",ultimoRemito);
-                  $.ajax({
-
-                    url:"ajax/remitos.ajax.php",
-                    method: "POST",
-                    data: datos,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    dataType:"json",
-                    
-                    success:function(respuestaUltimaFactura2){
-                      
-                      idUltimaFactura=respuestaUltimaFactura2["id"];
-                      
-                      codigoUltimaFactura=respuestaUltimaFactura2["codigo"];
-                      
-                      window.open("extensiones/tcpdf/pdf/remito.php?id="+idUltimaFactura ,"REMITO",1,2);
-                      $('#modalLoader').modal('hide');
-                      window.location = "remitos";
-                     
-                    }  
-                  })
-               
-                  
-                  break;
-                default:
-                       
-                       swal({
-                        type: "warning",
-                        title:"Error" ,
-                        text: respuesta,
-                        showConfirmButton: true,
-                        confirmButtonText: "Cerrar"
-                        }).then(function(result){
-                            if (result.value) {
-
-                              window.location = "ventas";
-                            
-                            }
-
-                        })
-   
-                  } 
-                 
-        }
-
+        success:function(respuestaUltimaFactura){
+          
+          
+          idUltimaFactura=respuestaUltimaFactura["id"];
+          codigoUltimaFactura=respuestaUltimaFactura["codigo"];
+          
+          
+          window.location = "index.php?ruta=ventas&id="+idUltimaFactura;
+          
+        } 
 
       })
+        
+    }
+
+  })
+
+ 
 })
 
 /*=============================================

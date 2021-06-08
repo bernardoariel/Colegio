@@ -1,4 +1,4 @@
- <?php
+<?php
   
   // FECHA DEL DIA DE HOY
   $fecha=date('Y-m-d');
@@ -41,11 +41,13 @@
         </a>
 
          <button type="button" class="btn btn-default pull-right" id="daterange-btn">
+           
            <span>
              <i class="fa fa-calendar"></i> Rango de Fecha
            </span>
            
            <i class="fa fa-caret-down"></i>
+
          </button>
 
       </div>
@@ -58,7 +60,7 @@
          
          <tr>
            
-         <th style="width:10px">#</th>
+           <th style="width:10px">#</th>
            <th style="width:45px">Fecha</th>
            <th style="width:30px">Tipo</th>
            <th style="width:90px">Nro. Factura</th>
@@ -75,130 +77,213 @@
 
         <tbody>
 
-        <?php
+          <?php
 
-          if(isset($_GET["fechaInicial"])){
+            if(isset($_GET["fechaInicial"])){
 
-            $fechaInicial = $_GET["fechaInicial"];
-            $fechaFinal = $_GET["fechaFinal"];
+              $fechaInicial = $_GET["fechaInicial"];
+              $fechaFinal = $_GET["fechaFinal"];
 
-          }else{
+            }else{
 
-            $fechaInicial = null;
-            $fechaFinal = null;
+              $fechaInicial = null;
+              $fechaFinal = null;
 
-          }
-
-          $respuesta = ControladorVentas::ctrRangoFechasVentas2($fechaInicial, $fechaFinal);
-          
-          foreach ($respuesta as $key => $value) {
-           
-               echo '<tr>
-
-                      <td>'.($key+1).'</td>
-
-                      <td>'.$value["fecha"].'</td>
-
-                      <td>'.$value["tipo"].'</td>';
-
-                      $itemCliente = "id";
-                      $valorCliente = $value["id_cliente"];
-
-                      $respuestaCliente = ControladorEscribanos::ctrMostrarEscribanos($itemCliente, $valorCliente);
-
-                      if($value["codigo"]=='SIN HOMOLOGAR'){
-
-                        echo '<td><center><button class="btn btn-danger btnHomologarAfip" title="aprobacioAfip" data-toggle="modal" data-target="#modalPrepararAfip" idVenta="'.$value["id"].'" documentoHomologacion="'.$value["documento"].'" nombreHomologacion="'.$value["nombre"].'" totalHomologacion="'.$value["total"].'" idCliente="'.$value["id_cliente"].'">'.$value["codigo"].' - COD:'.$value["id"].'</button></center></td>';
-
-                        if (strlen($value["nombre"])==0){
-                          echo '<td style=color:red>ERROR -- AVISAR AL PROGRAMADOR </td>';
-                        }else{
-                          echo '<td>'.$value["nombre"].'</td>';
-                        }
-
-
-
-                      }else{
-
-                        echo '<td><center>'.$value["codigo"].'</center></td>';
-                        
-                        if (strlen($value["nombre"])==0){
-                          echo '<td style=color:red>ERROR -- AVISAR AL PROGRAMADOR </td>';
-                        }else{
-                          echo '<td>'.$value["nombre"].'</td>';
-                        }
-                        
-                      }
-
-                      echo '<td>'.$value["documento"].'</td>';
-
-                      
-
-                      
-                      echo '<td>'.$value["metodo_pago"].'</td>';
-
-                              
-
-                             // <td>$ '.number_format($value["total"],2).'</td>';
-                             
-                           /*   if ($value["adeuda"]==0){
-
-                                echo '<td style="color:green">$ '.number_format($value["adeuda"],2).'</td>';
-
-                              }else{
-
-                                echo '<td style="color:red">$ '.number_format($value["adeuda"],2).'</td>';
-
-                              }*/
-                                                   
-                      if ($value["adeuda"]==0){
-
-                        echo ' <td style="color:green"><strong>$ '.number_format($value["total"],2).'</strong></td>';
-                        // <td style="color:green">$ '.number_format($value["adeuda"],2).'</td>';
-
-                      }else{
-
-                        echo ' <td style="color:red"><strong>$ '.number_format($value["total"],2).'</strong></td>';
-                        // echo '<td style="color:red">$ '.number_format($value["adeuda"],2).'</td>';
-
-                      }
-                    echo '<td>'.$value["observaciones"].'</td>';          
-
-                    echo '<td>
-                            <div class="btn-group">
-                              <button class="btn btn-info btnVerVenta" idVenta="'.$value["id"].'" codigo="'.$value["codigo"].'" title="ver la factura" data-toggle="modal" data-target="#modalVerArticulos"><i class="fa fa-eye"></i></button>';
-                    
-                    if ($value["cae"]!=''){   
-                         
-                        echo '<button class="btn btn-danger btnImprimirFactura" idVenta="'.$value["id"].'" total="'.$value["total"].'" adeuda="'.$value["adeuda"].'" codigoVenta="'.$value["codigo"].'"><i class="fa fa-file-pdf-o"></i></button>';
-                        
-                        if($_SESSION['perfil']=="SuperAdmin"){
-                          
-                          if($value["tipo"]<>"NC" && $value["observaciones"]==""){
-
-                            #PARA HACER LA NOTA DE CREDITO
-                            echo '<button class="btn btn-warning btnImprimirNC" idVenta="'.$value["id"].'" total="'.$value["total"].'" adeuda="'.$value["adeuda"].'" codigoVenta="'.$value["codigo"].'" title="hacer Nota de Credito" data-toggle="modal" data-target="#modalVerNotaCredito" ><i class="fa fa-file-pdf-o"></i></button>';
-
-                          }
-                         
-                        }
-
-                     }else{
-
-                      echo '<button class="btn btn-primary btnImprimirFacturaSinHomolgar" idVenta="'.$value["id"].'"><i class="fa fa-print"></i></button>';
-                     }
-
-                    echo '</div>  
-
-                      </td>
-
-                    </tr>';
-                // }
             }
 
-        ?>
-               
-        </tbody>
+            $respuesta = ControladorVentas::ctrRangoFechasVentas2($fechaInicial, $fechaFinal);
+
+          ?>
+
+          <?php foreach ($respuesta as $key => $value): ?>
+
+
+            <?php
+              $itemCliente = "id";
+              $valorCliente = $value["id_cliente"];
+  
+              $respuestaCliente = ControladorEscribanos::ctrMostrarEscribanos($itemCliente, $valorCliente);
+            ?>
+
+ 
+          <tr>
+
+            <td> <?php echo ($key+1); ?></td>
+
+            <td><?php echo $value["fecha"];?></td>
+
+            <td><?php echo $value["tipo"];?></td>
+
+            <?php if ($value["codigo"]=='SIN HOMOLOGAR'): ?>
+              
+              <?php if (isset($_GET['id'])): ?>
+                
+                <?php if ($value["id"]==$_GET["id"]): ?>
+
+                  <td>
+                    <div class="btn-group">
+                      <center>
+                        <button class="btn btn-warning btnHomologacionAutomatica" title="aprobacioAfip" idVenta="<?php echo $value['id']; ?>" documentoHomologacion="<?php echo $value['documento']; ?>" nombreHomologacion="<?php echo $value['nombre']; ?>" totalHomologacion="<?php echo $value['total']; ?>">Comprobando...<span class="fa fa-refresh fa-spin"></span>
+                        </button>
+                      </center>
+                    </div>
+                  </td>
+
+                  <script>
+
+                    var idVentaHomologacion = "<?php echo $value["id"];?>";
+                    var nombreClienteHomologacionBtn = "<?php echo $value["nombre"];?>";//$(this).attr("nombrehomologacion");
+                    var documentoClienteHomologacionBtn = "<?php echo $value["documento"];?>";//$(this).attr("documentohomologacion");
+
+                    var datos = new FormData();
+                    datos.append("idVentaHomologacion", idVentaHomologacion);
+                    datos.append("nombreClienteHomologacionBtn", nombreClienteHomologacionBtn);
+                    datos.append("documentoClienteHomologacionBtn", documentoClienteHomologacionBtn);
+
+                    $.ajax({
+
+                      url:"ajax/crearventa.ajax.php",
+                      method: "POST",
+                      data: datos,
+                      cache: false,
+                      contentType: false,
+                      processData: false,
+                      beforeSend: function(){
+                      $('#modalLoader').modal('show');
+                      },
+                      success:function(respuesta){
+                        console.log("respuesta", respuesta);
+
+                        respuestaCortada=respuesta.substring(0, 2);
+
+                        switch(respuestaCortada) {
+                          case 'FE':
+                            $('#modalLoader').modal('hide');
+                            window.open("extensiones/fpdf/pdf/facturaElectronica.php?id="+idVentaHomologacion, "FACTURA",1,2);
+
+                            window.location = "inicio";
+                          break;
+
+                          default:
+                            $('#modalLoader').modal('hide');
+                              swal({
+                                type: "warning",
+                                title: 'Posiblemente falla en la conexion',
+                                text: "DE AFIP",
+                                showConfirmButton: true,
+                                confirmButtonText: "Cerrar"
+                              }).then(function(result){
+                                  
+                                  if (result.value) {
+                                    window.open("extensiones/tcpdf/pdf/factura.php?id="+idVentaHomologacion ,"FACTURA",1,2);
+                                    window.location = "ventas";
+                                  }
+
+                              })
+                        } //switch
+
+                      }//success
+
+                    })//ajax
+
+                  </script>
+            
+                <?php else: ?> <!-- if ($value["id"]==$_GET["id"]): -->
+
+                  <td>
+                    <center>
+                      <button class="btn btn-danger btnHomologarAfip" title="aprobacioAfip" data-toggle="modal" data-target="#modalPrepararAfip" idVenta="<?php echo $value['id']; ?>" documentoHomologacion="<?php echo $value['documento']; ?>" nombreHomologacion="<?php echo $value['nombre']; ?>" totalHomologacion="<?php echo $value['total']; ?>"><?php echo $value['codigo']; ?> - COD:<?php echo $value['id']; ?></button>
+                    </center>
+                  </td>
+            
+                <?php endif ?> <!-- if ($value["id"]==$_GET["id"]): -->
+              
+              <?php else: ?> <!-- if (isset($_GET['id'])): -->
+                
+                <td>
+                  <center>
+                    <button class="btn btn-danger btnHomologarAfip" title="aprobacioAfip" data-toggle="modal" data-target="#modalPrepararAfip" idVenta="<?php echo $value['id']; ?>" documentoHomologacion="<?php echo $value['documento']; ?>" nombreHomologacion="<?php echo $value['nombre']; ?>" totalHomologacion="<?php echo $value['total']; ?>"><?php echo $value['codigo']; ?> - COD:<?php echo $value['id']; ?></button>
+                  </center>
+                </td>
+
+              <?php endif ?> <!-- if (isset($_GET['id'])):  -->
+              
+              <td><?php echo $value['nombre']; ?></td>
+           
+            <?php else: ?> <!-- if ($value["codigo"]=='SIN HOMOLOGAR'): -->
+              
+              <td>
+                <center><?php echo $value['codigo']; ?></center>
+              </td>
+
+              <?php if (strlen($value["nombre"])==0): ?>
+
+                <td style=color:red>ERROR -- AVISAR AL PROGRAMADOR </td>
+
+              <?php else: ?> 
+
+                <td><?php echo $value['nombre']; ?></td>
+
+              <?php endif ?> <!-- if (strlen($value["nombre"])==0): -->
+              
+            <?php endif ?> <!-- if ($value["codigo"]=='SIN HOMOLOGAR'): -->
+
+            <td><?php echo $value['documento']; ?></td>
+
+            <td><?php echo $value['metodo_pago']; ?></td>
+
+            <td>$ <?php echo number_format($value["total"],2); ?> </td>
+                
+              <?php if ($value["adeuda"]==0): ?>
+                   
+                <td style="color:green">$ <?php echo number_format($value["adeuda"],2); ?></td>
+
+              <?php else: ?>      <!--  ($value["adeuda"]==0): -->
+
+                <td style="color:red">$ <?php echo number_format($value["adeuda"],2); ?></td>
+
+              <?php endif ?>      <!--  ($value["adeuda"]==0): -->
+
+            <td>
+              
+              <div class="btn-group">
+
+                <button class="btn btn-info btnVerVenta" idVenta="<?php echo $value['id']; ?>" codigo="<?php echo $value['codigo']; ?>" title="ver la factura" data-toggle="modal" data-target="#modalVerArticulos"><i class="fa fa-eye"></i>
+                </button>
+
+              <?php if ($value["cae"]!=''): ?>
+          
+                <button class="btn btn-danger btnImprimirFactura" idVenta="<?php echo $value['id']; ?>" total="<?php echo $value['total']; ?>" adeuda="<?php echo $value['adeuda']; ?>" codigoVenta="<?php echo $value['codigo']; ?>"><i class="fa fa-file-pdf-o"></i>
+                </button>
+
+                <?php if ($_SESSION['perfil']=="SuperAdmin"): ?>
+                  
+                  <?php if ($value["tipo"]<>"NC" && $value["observaciones"]==""): ?>
+
+                    <!-- PARA HACER LA NOTA DE CREDITO -->
+                    <button class="btn btn-warning btnImprimirNC" idVenta="<?php echo $value['id']; ?>" total="<?php echo $value['total']; ?>" adeuda="<?php echo $value['adeuda']; ?>" codigoVenta="<?php echo $value['codigo']; ?>" title="hacer Nota de Credito" data-toggle="modal" data-target="#modalVerNotaCredito" ><i class="fa fa-file-pdf-o"></i></button>';
+
+                  <?php endif ?> <!-- if ($value["tipo"]<>"NC" && $value["observaciones"]==""): -->
+                  
+                <?php endif ?> <!-- ($_SESSION['perfil']=="SuperAdmin"): -->
+              
+              <?php else: ?>   <!-- if ($value["cae"]!=''): -->
+             
+                    <button type="button" class="btn btn-primary pull-left btnImprimirPdfSH" idFactura="<?php echo $value['id']; ?>"><i class="fa fa-file-text"></i></button>
+            
+              <?php endif ?>   <!-- if ($value["cae"]!=''): -->
+            
+              </div>  
+
+            </td>
+
+          </tr>
+
+        <?php endforeach ?> 
+
+
+     
+</tbody>
 
        </table>
 
