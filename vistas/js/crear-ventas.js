@@ -471,6 +471,8 @@ $("#guardarVenta").on("click",function(){
   datos.append("nuevoPrecioImpuesto", $('#nuevoPrecioImpuesto').val());
   datos.append("nuevoPrecioNeto", $('#nuevoPrecioNeto').val());
   datos.append("nuevoTotalVentas", $('#nuevoTotalVentas').val());
+  datos.append("tipoFc", 'FC');
+  
   
   //CREAMOS LA FACTURA
   $.ajax({

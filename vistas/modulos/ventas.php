@@ -116,9 +116,11 @@
 
             <?php if ($value["codigo"]=='SIN HOMOLOGAR'): ?>
               
-              <?php if (isset($_GET['id'])): ?>
+              <?php if (isset($_GET['id'])):?>
                 
-                <?php if ($value["id"]==$_GET["id"]): ?>
+                <?php if ($value["id"]==$_GET["id"]): 
+                   
+                  ?>
 
                   <td>
                     <div class="btn-group">
@@ -132,8 +134,11 @@
                   <script>
 
                     var idVentaHomologacion = "<?php echo $value["id"];?>";
+                    console.log('idVentaHomologacion: ', idVentaHomologacion);
                     var nombreClienteHomologacionBtn = "<?php echo $value["nombre"];?>";//$(this).attr("nombrehomologacion");
+                    console.log('nombreClienteHomologacionBtn: ', nombreClienteHomologacionBtn);
                     var documentoClienteHomologacionBtn = "<?php echo $value["documento"];?>";//$(this).attr("documentohomologacion");
+                    console.log('documentoClienteHomologacionBtn: ', documentoClienteHomologacionBtn);
 
                     var datos = new FormData();
                     datos.append("idVentaHomologacion", idVentaHomologacion);
@@ -158,10 +163,29 @@
 
                         switch(respuestaCortada) {
                           case 'FE':
+                            const valores = window.location.search;
+                            const urlParams = new URLSearchParams(valores);
+                            var tipo = urlParams.get('tipo');
+                            console.log('tipo: ', tipo);
+                           
                             $('#modalLoader').modal('hide');
-                            window.open("extensiones/fpdf/pdf/facturaElectronica.php?id="+idVentaHomologacion, "FACTURA",1,2);
 
-                            window.location = "inicio";
+                            window.open("extensiones/fpdf/pdf/facturaElectronica.php?id="+idVentaHomologacion, "FACTURA",1);
+                            
+                            if(tipo=='cuota'){
+                              
+                              window.location = "index.php?ruta=inicio&tipo=cuota&idventa=<?php echo $value["id"];?>&idescribano=<?php echo $value["id_cliente"];?>";
+
+                            } else {
+
+                              
+
+                              window.location = "inicio";
+
+                            }
+                            
+
+                             
                           break;
 
                           default:
@@ -175,7 +199,7 @@
                               }).then(function(result){
                                   
                                   if (result.value) {
-                                    window.open("extensiones/tcpdf/pdf/factura.php?id="+idVentaHomologacion ,"FACTURA",1,2);
+                                    window.open("extensiones/tcpdf/pdf/factura.php?id="+idVentaHomologacion ,"FACTURA",1);
                                     window.location = "ventas";
                                   }
 

@@ -87,7 +87,7 @@ class AjaxCrearVenta{
 		$codigoFactura ="SIN HOMOLOGAR";
 		$datos = array("id_vendedor"=>$_POST["idVendedor"],
 					   "fecha"=>$fecha,
-					   "tipo"=>"FC",
+					   "tipo"=>$_POST["tipoFc"],
 					   "id_cliente"=>$_POST["seleccionarCliente"],
 					   "nombre"=>$_POST['nombreCliente'],
 					   "documento"=>$_POST['documentoCliente'],
@@ -108,8 +108,14 @@ class AjaxCrearVenta{
 	   
 		
 		$respuesta = ModeloVentas::mdlIngresarVenta($tabla, $datos);
-
+		
 		ControladorArticulos::ctrPrepararIngresoArticulo();
+
+		if(isset( $_POST['idVentaNro'])){
+			
+			$respuesta2=  ModeloCuotas::mdlEliminarVenta("cuotas", $_POST["idVentaNro"]);
+			echo '<center><pre>'; print_r($respuesta2 . ' '.$_POST["idVentaNro"]); echo '</pre></center>';
+		}
 		
 	}
 

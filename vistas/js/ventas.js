@@ -12,8 +12,16 @@ if(localStorage.getItem("capturarRango") != null){
 	$("#daterange-btn span").html('<i class="fa fa-calendar"></i> Rango de fecha')
 
 }
+/*=============================================
+IMPRIMIR LA FACTURA
+=============================================*/
+$(".btnImprimirPdfSH").on("click",function(){
 
-
+	let idFactura = $(this).attr("idFactura");
+	/* window.open("extensiones/tcpdf/pdf/factura.php?id="+idFactura, "FACTURA",1,2); */
+	window.open("extensiones/tcpdf/pdf/factura.php?id="+idFactura, "FACTURA",1);
+	
+})
 
 /*=============================================
 ACTIVAR LOS BOTONES CON LOS ID CORRESPONDIENTES

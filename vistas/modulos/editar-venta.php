@@ -120,6 +120,8 @@ switch ($cantCabeza) {
                   <input type='hidden' id='idVendedor' name='idVendedor' value='1'>
 
                   <input type='hidden' id='idVenta' name='idVenta' value='<?php echo $_GET["idVenta"];?>'>
+                  
+                  <input type='hidden' id='tipoFc' name='tipoFc' value='<?php echo $venta["tipo"];?>'>
 
                   
                 </div>
