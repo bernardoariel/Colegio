@@ -67,6 +67,22 @@ class AjaxCrearVenta{
 	=============================================*/	
 	public function ajaxSinHomologacion(){
 
+		/**
+		 * agrego esto para poder realizar la correlatividad... de los eje
+		 */
+		$listaProductos = json_decode($_POST["listaProductos"], true);
+		#creo un array del afip
+		$items=Array();
+		#recorro $listaproductos para cargarlos en la tabla de comprobantes
+		foreach ($listaProductos as $key => $value) {
+
+		    $tablaComprobantes = "comprobantes";
+
+		    $valor = $value["idnrocomprobante"];
+		    $datos = $value["folio2"];
+
+		    $actualizarComprobantes = ModeloComprobantes::mdlUpdateComprobante($tablaComprobantes, $valor,$datos);
+		}
 		
 		$fecha = date("Y-m-d");
 
