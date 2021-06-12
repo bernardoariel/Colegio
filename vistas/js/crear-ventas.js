@@ -445,6 +445,7 @@ $('#modalClienteDni').on('shown.bs.modal', function () {
     $("#tipoDocumento").val(tipoDocumentoEventual);
     $("#modalClienteDni").modal('hide');
     $("#tipoCliente").val('casual');
+    
   })
 /*=============================================
 FACTURA ELECTRONICA
