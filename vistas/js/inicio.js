@@ -1,10 +1,11 @@
 $(document).ready(function() {
   // INICIO LOS COMPROBANTES
   var pathname = window.location.pathname;
-  
+
   
   if(pathname =="/colegio/iniciosinconexion"){
 
+    
     if(navigator.onLine) {
     // el navegador está conectado a la red
       window.location = "inicio";

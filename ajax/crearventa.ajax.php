@@ -126,7 +126,7 @@ class AjaxCrearVenta{
 		$respuesta = ModeloVentas::mdlIngresarVenta($tabla, $datos);
 		
 		
-		ControladorArticulos::ctrPrepararIngresoArticulo();
+		// ControladorArticulos::ctrPrepararIngresoArticulo();
 
 		if ($_POST["listaMetodoPago"]!='CTA.CORRIENTE'){
 
