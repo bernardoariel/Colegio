@@ -1,3 +1,19 @@
+<style>
+
+  .panel-primary>.panel-heading {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+.box.box-primary {
+    border-top-color: #17a2b8;
+}
+.panel-primary{
+  border-color:#17a2b8;
+  
+}
+
+</style>
 <?php
   
 // FECHA DEL DIA DE HOY
@@ -93,7 +109,7 @@ switch ($cantCabeza) {
 
     <form method="post" class="formularioVenta" name="frmVenta" id="frmVenta">
 
-    <div class="row">
+    <div class="row" style="background-color: #f8f9fa; color:#343a40">
 
       <!--=====================================================
                         PANEL IZQUIERDO
@@ -103,9 +119,9 @@ switch ($cantCabeza) {
            
            <div class="panel panel-primary">
 
-            <div class="panel-heading">
+            <div class="panel-heading" id="headPanel">
 
-                <h4>Datos del Escribano</h4>
+                <h4 style="text-align:center">Datos de la Factura</h4>
 
             </div>
 
@@ -131,32 +147,18 @@ switch ($cantCabeza) {
 
                   <input type='hidden' id='tipoDocumento' name='tipoDocumento'>
 
-                  <input type='hidden' id='tipoCliente' name='tipoCliente'>
+                  <input type='hidden' id='tipoCliente' name='tipoCliente' value="consumidorfinal">
+                  
+                  <input type='hidden' id='categoria' name='categoria' value="SinCategoria">
 
                 </div>
+                <div class="col-xs-12 text-success" style="text-align: center;font-weight: bold;" id="msgCategoria"></div>
                 
                 <div class="col-xs-12">
 
-                    <button type="button" class="btn btn-primary btn-block btnBuscarCliente" data-toggle="modal" data-target="#myModalClientes" style="margin-top: 5px;" autofocus>Buscar Escribano</button>
+                    <button type="button" id="btnBuscarNombreClienteFc" class="btn btn-primary btn-block btnBuscarCliente" data-toggle="modal" data-target="#myModalClientes" style="margin-top: 5px;" autofocus>Seleccionar Escribano o Cliente</button>
 
                 </div>
-
-                <!-- <div class="col-xs-12">
-
-                  <div class="form-group">
-                  
-                    <label>DOCUMENTO</label>
-
-                      
-
-                        <input type="text" class="form-control pull-right" id="documento" name="documento"  readonly>
-
-                     
-                
-                    </div>
-              
-                  </div> -->
-                  
                 
                 <div class="col-xs-12">
 
@@ -175,7 +177,8 @@ switch ($cantCabeza) {
 
                 </div>
 
-                <div class="col-xs-12 ">
+                <div class="col-xs-12">
+
                   <label for="nuevaReferencia">REFERENCIA</label>
 
                   <input type="text" class="form-control" placeholder="REFERENCIA...." id='nuevaReferencia' name='nuevaReferencia' value='EFECTIVO' autocomplete="off">
@@ -209,10 +212,12 @@ switch ($cantCabeza) {
             
             <div class="box box-primary">
 
-                <div class="box-header with-border " style="background-color: #428bca; color:white">
+                <div class="box-header with-border" id="headPanelItems" style="background-color: #17a2b8; color:white">
 
-                  <h3 class="box-title">Articulos</h3>
-
+                  <h3 class="box-title pull-right">Articulos</h3>
+                  
+                  <button id="reiniciar" type="button" class="btn bg-navy btn-flat btn-xs pull-left">Actualizar <i class="glyphicon glyphicon-refresh"></i> Reiniciar</button>
+                  
                 </div>
 
               <!-- /.box-header -->
@@ -395,28 +400,33 @@ $parametros = ControladorParametros::ctrMostrarParametroAtraso($item, $valor);
 
 foreach ($clientes as $key => $value) {
 
+  $item = 'id';
+  $valor = $value["id_categoria"];
+
+  $categoria = ControladorCategorias::ctrMostrarCategorias($item, $valor);
+
   $cantLibros =$value["ultimolibrocomprado"]-$value["ultimolibrodevuelto"];
-    echo '<tr>';
-    echo '<td>'.$value["nombre"].'</td>'; 
-    echo '<td>'.$value["documento"].'</td>'; 
-    echo '<td>'.$value["cuit"].'</td>'; 
-    echo '<td>'.$cantLibros.'</td>'; 
+  echo '<tr>';
+  echo '<td>'.$value["nombre"].'</td>'; 
+  echo '<td>'.$value["documento"].'</td>'; 
+  echo '<td>'.$value["cuit"].'</td>'; 
+  echo '<td>'.$cantLibros.'</td>'; 
 
     //CONSULTO SI ESTA ATRASADO O AL DIA 1==NO TIENE DEUDA A FACTURAR
     if($value["cuit"]!='0'){
       
       if($value["inhabilitado"]==0){
 
-        //ACA ENTRAN TODOS LOS QUE ESTAN AL DIA
-        // echo '<td><button class="btn btn-primary btnBuscarCliente" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="'.$value["facturacion"].'" tipoCLiente="escribanos" >Seleccionar</button></td>';
         if ($value["facturacion"]=="DNI"){
 
-          echo '<td><button class="btn btn-primary btnBuscarCliente" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["documento"].'" tipoDocumento="'.$value["facturacion"].'" tipoCLiente="escribanos" >Seleccionar</button></td>';
+          echo '<td><button class="btn btn-primary btnBuscarCliente" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["documento"].'" tipoDocumento="'.$value["facturacion"].'" categoria="'.$categoria["categoria"].'" tipoCLiente="escribanos" >Seleccionar</button></td>';
 
         }else{
 
           if ($cantLibros<=$parametros["valor"]){   
-            echo '<td><button class="btn btn-primary btnBuscarCliente" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="'.$value["facturacion"].'" tipoCLiente="escribanos" >Seleccionar</button></td>';
+
+            echo '<td><button class="btn btn-primary btnBuscarCliente" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="'.$value["facturacion"].'" categoria="'.$categoria["categoria"].'" tipoCLiente="escribanos" ">Seleccionar</button></td>';
+
           }else{
 
             echo '<td><button class="btn btn-danger" data-dismiss="modal">Inhabilitado (Libros)</button></td>';
@@ -437,7 +447,7 @@ foreach ($clientes as $key => $value) {
 
       if ($value["id"]=='1'){
         
-        echo '<td><button class="btn btn-primary btnBuscarCliente" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="'.$value["facturacion"].'" tipoCLiente="consumidorfinal" >Seleccionar</button></td>';
+        echo '<td><button class="btn btn-primary btnBuscarCliente" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="'.$value["facturacion"].'" categoria="categoria" tipoCLiente="consumidorfinal" >Seleccionar</button></td>';
 
       }else{
 
@@ -466,7 +476,7 @@ foreach ($clientes2 as $key => $value) {
    echo '<td> - - </td>'; 
    echo '<td>'.$value["cuit"].'</td>';
    echo '<td> - - </td>';
-   echo '<td><button class="btn btn-primary btnBuscarCliente2" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="CUIT" tipoCLiente="clientes">Seleccionar</button></td>';
+   echo '<td><button class="btn btn-primary btnBuscarCliente2" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="CUIT" categoria="categoria" tipoCLiente="clientes">Seleccionar</button></td>';
    echo '</tr>';
 
 
@@ -484,7 +494,7 @@ foreach ($delegaciones as $key => $value) {
    echo '<td> - - </td>'; 
    echo '<td> - - </td>'; 
    echo '<td> - - </td>';
-   echo '<td><button class="btn btn-primary btnBuscarDelegacion" data-dismiss="modal"  idDelegacion='.$value["id"].' nombreDelegacion="'.$value["nombre"].'">Seleccionar</button></td>';
+   echo '<td><button class="btn btn-primary btnBuscarDelegacion" data-dismiss="modal"  idDelegacion='.$value["id"].' categoria="categoria" nombreDelegacion="'.$value["nombre"].'">Seleccionar</button></td>';
    echo '</tr>';
 
 
@@ -577,6 +587,11 @@ foreach ($clientes as $key => $value) {
 
   if($value["cuit"]!='0' && $value["inhabilitado"]==0){
     
+    $item = 'id';
+    $valor = $value["id_categoria"];
+
+    $categoria = ControladorCategorias::ctrMostrarCategorias($item, $valor);
+
     $cantLibros =$value["ultimolibrocomprado"]-$value["ultimolibrodevuelto"];
     echo '<tr>';
     echo '<td>'.$value["nombre"].'</td>'; 
@@ -584,7 +599,7 @@ foreach ($clientes as $key => $value) {
     echo '<td>'.$value["cuit"].'</td>'; 
     echo '<td>'.$cantLibros.'</td>'; 
     
-      echo '<td><button class="btn btn-primary btnBuscarCliente" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="'.$value["facturacion"].'" tipoCLiente="escribanos" >Seleccionar</button></td>';
+      echo '<td><button class="btn btn-primary btnBuscarCliente" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="'.$value["facturacion"].'" categoria="'.$categoria["categoria"].'" tipoCLiente="escribanos" >Seleccionar</button></td>';
     //CONSULTO SI ESTA ATRASADO O AL DIA 1==NO TIENE DEUDA A FACTURAR
    
     
@@ -614,7 +629,7 @@ foreach ($delegaciones as $key => $value) {
    echo '<td> - - </td>'; 
    echo '<td> - - </td>'; 
    echo '<td> - - </td>';
-   echo '<td><button class="btn btn-primary btnBuscarDelegacion" data-dismiss="modal"  idDelegacion='.$value["id"].' nombreDelegacion="'.$value["nombre"].'">Seleccionar</button></td>';
+   echo '<td><button class="btn btn-primary btnBuscarDelegacion" data-dismiss="modal"  idDelegacion='.$value["id"].' categoria="categoria" nombreDelegacion="'.$value["nombre"].'">Seleccionar</button></td>';
    echo '</tr>';
 
 
@@ -711,7 +726,7 @@ foreach ($clientes2 as $key => $value) {
    echo '<td> - - </td>'; 
    echo '<td>'.$value["cuit"].'</td>';
    echo '<td> - - </td>';
-   echo '<td><button class="btn btn-primary btnBuscarCliente2" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="CUIT" tipoCLiente="clientes">Seleccionar</button></td>';
+   echo '<td><button class="btn btn-primary btnBuscarCliente2" data-dismiss="modal"  idCliente='.$value["id"].' nombreCliente="'.$value["nombre"].'" documentoCliente="'.$value["cuit"].'" tipoDocumento="CUIT" categoria="categoria" tipoCLiente="clientes">Seleccionar</button></td>';
    echo '</tr>';
 
 
@@ -761,7 +776,7 @@ foreach ($clientes2 as $key => $value) {
             <input type="hidden" class="form-control"  id="idproducto"  name="idproducto">
             <input type="hidden" class="form-control"  id="idNroComprobante"  name="idNroComprobante">
             <input type="hidden" class="form-control"  id="cantVentaProducto"  name="cantVentaProducto">
-             <input type="hidden" class="form-control"  id="idVenta"  name="idVenta" value="0">
+            <input type="hidden" class="form-control"  id="idVenta"  name="idVenta" value="0">
           </div>
           <div class="col-xs-5">
             <label for="nombreProducto">PRODUCTO</label>
@@ -778,7 +793,7 @@ foreach ($clientes2 as $key => $value) {
        </div>
      </div>
         <div id="contenido_producto">
-        <table id="buscararticulotabla" class="table table-bordered table-striped tablaBuscarProductos">
+        <table id="buscararticulotabla" class="table table-bordered table-striped tablaBuscarProductos" width="100%">
          <thead>
           <tr>
             <th width="10">id</th>
@@ -788,45 +803,7 @@ foreach ($clientes2 as $key => $value) {
           </tr>
          </thead>
          <tbody>
-      
-      
-       <?php
-       
-
-        $item = null;
-        $valor = null;
-        $orden = "nombre";
-
-        $productos = ControladorProductos::ctrMostrarProductos($item, $valor, $orden);
-
-        foreach ($productos as $key => $value){
-          
-          //ULTIMO NUMERO DE VENTAS
-          $item = "id";
-          $valor = $value["nrocomprobante"];
-
-          $comprobantes = ControladorComprobantes::ctrMostrarComprobantes($item, $valor);
-          
-
-          echo ' <tr>
-                  <td>'.($key+1).'</td>
-                  <td>'.$value["nombre"].'</td>';
-                 
-          echo   '<td>'.$value["importe"].'</td>';
-          echo   '<td>
-                    
-                     <button class="btn btn-primary btnSeleccionarProducto" idProducto="'.$value["id"].'" idNroComprobante="'.$value["nrocomprobante"].'" cantVentaProducto="'.$value["cantventa"].'" productoNombre="'.$value["nombre"].'" precioVenta="'.$value["importe"].'">Seleccionar</button>  
-
-                  </td>
-
-                </tr>';
-        }
-
-       
-        
-
-       ?>
-      </tbody>
+         </tbody>
     </table>
 </div>
       </div><!-- Modal body-->

@@ -31,4 +31,5 @@ if(isset($_POST["idRubro"])){
 	$categoria = new AjaxRubros();
 	$categoria -> idRubro = $_POST["idRubro"];
 	$categoria -> ajaxEditarRubro();
+	
 }

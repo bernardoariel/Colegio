@@ -61,6 +61,16 @@ class AjaxCrearVenta{
 		echo json_encode($respuesta);
 
 	}
+
+	/*=============================================
+	REMITOS
+	=============================================*/	
+	public function ajaxRemito(){
+
+		$respuesta = ControladorRemitos::ctrCrearRemito();
+		return $respuesta;
+
+	}
 	
 	/*=============================================
 	FACTURA SIN HOMOLOGACION
@@ -129,8 +139,8 @@ class AjaxCrearVenta{
 
 		if(isset( $_POST['idVentaNro'])){
 			
-			$respuesta2=  ModeloCuotas::mdlEliminarVenta("cuotas", $_POST["idVentaNro"]);
-			echo '<center><pre>'; print_r($respuesta2 . ' '.$_POST["idVentaNro"]); echo '</pre></center>';
+			ModeloCuotas::mdlEliminarVenta("cuotas", $_POST["idVentaNro"]);
+			// echo '<center><pre>'; print_r($respuesta2 . ' '.$_POST["idVentaNro"]); echo '</pre></center>';
 		}
 		
 	}
@@ -283,5 +293,13 @@ if(isset($_POST["idVentaHomologacion"])){
 
 	$nuevaVenta = new AjaxCrearVenta();
 	$nuevaVenta -> ajaxHomogacionVenta();
+
+}
+
+if(isset($_POST["remito"])){
+
+
+	$nuevaVenta = new AjaxCrearVenta();
+	$nuevaVenta -> ajaxRemito();
 
 }

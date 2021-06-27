@@ -1,4 +1,21 @@
+$(document).ready(function() {
+  // INICIO LOS COMPROBANTES
+  var pathname = window.location.pathname;
+  console.log("pathname", pathname);
+  
+  if(pathname =="/colegio/crear-venta"){
 
+    borrarTablaComprobantes();
+    borrarTablaItems();
+    iniciarComprobantes();
+    $("#resultadoBusqueda").html('');
+
+  }
+
+});
+$("#reiniciar").on("click",()=>{
+  location.reload()
+})
 /*=============================================
 CARGAR LA TABLA 
 =============================================*/
@@ -29,27 +46,8 @@ var tablaBuscarCliente = $('.tablaBuscarClientes').DataTable({
         }
       }
 
-
 })
 
-$(document).ready(function() {
-  // INICIO LOS COMPROBANTES
-  var pathname = window.location.pathname;
-  console.log("pathname", pathname);
-  
-
-  if(pathname =="/colegio/crear-venta"){
-
-    borrarTablaComprobantes();
-    borrarTablaItems();
-    iniciarComprobantes();
-    $("#resultadoBusqueda").html('');
-
-  }
-  
-
-
-});
 
 function borrarTablaItems(){
 
@@ -68,7 +66,7 @@ function borrarTablaItems(){
     success:function(respuesta4){
       // console.log("respuestaaaaa", respuesta4);
       
-      
+
     }
 
   })
@@ -96,6 +94,7 @@ function borrarTablaComprobantes(){
   }) 
 
 }
+
 function iniciarComprobantes(){
    var datos = new FormData();
         datos.append("todos", "todos");//MUESTRA TODOS LOS CAMPOS tmp_comprobantes
@@ -172,7 +171,6 @@ function validarCuit(cuit) {
 
 $("#seleccionarClientCuit").on("click",function(){
  
-
       var datos = new FormData();
       datos.append("documentoVerificar", $('#documentoAgregarCliente').val());
       console.log("$('#documentoAgregarCliente').val()", $('#documentoAgregarCliente').val());
@@ -225,14 +223,14 @@ $("#seleccionarClientCuit").on("click",function(){
                     $("#tipoDocumento").val('CUIT');
                     $('#seleccionarCliente').val(respuesta['id']);
                     $('#tipoCliente').val('clientes');
-                    
+                    $(".btnBuscarCliente").attr('disabled',true);
                     // $("#nombreAgregarCliente").val('');
                     // $("#documentoAgregarCliente").val('');
                     // $("#tipoCuitAgregarCliente").val('');
                     // $('#direccionAgregarCliente').val('');
                     // $('#localidadAgregarCliente').val('');
 
-
+                    mostrarDatos()
                   } 
 
                 })
@@ -262,7 +260,8 @@ $('#myModalClientes').on('shown.bs.modal', function () {
     tablaBuscarCliente.search('');
     tablaBuscarCliente.draw();
   
-  })
+})
+
 $("#consumidorFinal").on("click", function(){
 
     var idCliente = $(this).attr("idCliente");
@@ -272,15 +271,17 @@ $("#consumidorFinal").on("click", function(){
     var tipoDocumento = $(this).attr("tipoDocumento");
     var tipoCLiente = $(this).attr("tipoCLiente");
    
-    
     $("#tipoCliente").val(tipoCLiente);
     $("#seleccionarCliente").val(idCliente);
     $("#nombreCliente").val(nombreCliente);
     $("#documentoCliente").val(documentoCliente);
     $("#tipoDocumento").val(tipoDocumento);
+
     importeTotal = parseInt($("#totalVenta").val());
 
-     if(importeTotal ==0){
+    $(".btnBuscarCliente").attr('disabled',true);
+    
+    if(importeTotal ==0){
       
 
       $("#guardarVenta").attr('disabled',true);
@@ -288,25 +289,35 @@ $("#consumidorFinal").on("click", function(){
     }else{
 
       $("#guardarVenta").attr('disabled',false);
+
     }
+
+    mostrarDatos()
 })
+
 /*=============================================
 SELECCIONAR CLIENTE
 =============================================*/
 $(".tablaBuscarClientes").on("click", ".btnBuscarCliente", function(){
-
+  
+  
     var idCliente = $(this).attr("idCliente");
     var nombreCliente = $(this).attr("nombreCliente");
     var documentoCliente = $(this).attr("documentoCliente");
     var tipoDocumento = $(this).attr("tipoDocumento");
     var tipoCLiente = $(this).attr("tipoCLiente");
-   
+    var categoria =$(this).attr("categoria");
+    
+
     
     $("#tipoCliente").val(tipoCLiente);
     $("#seleccionarCliente").val(idCliente);
     $("#nombreCliente").val(nombreCliente);
     $("#documentoCliente").val(documentoCliente);
     $("#tipoDocumento").val(tipoDocumento);
+    $("#categoria").val(categoria);
+
+    
     importeTotal = parseInt($("#totalVenta").val());
 
      if(importeTotal ==0){
@@ -317,7 +328,11 @@ $(".tablaBuscarClientes").on("click", ".btnBuscarCliente", function(){
     }else{
 
       $("#guardarVenta").attr('disabled',false);
+
     }
+    $("#btnBuscarNombreClienteFc").attr('disabled',true);
+
+    mostrarDatos()
 })
 
 /*=============================================
@@ -325,6 +340,7 @@ SELECCIONAR CLIENTE
 =============================================*/
 $(".tablaBuscarClientes").on("click", ".btnBuscarCliente2", function(){
 
+
     var idCliente = $(this).attr("idCliente");
     var nombreCliente = $(this).attr("nombreCliente");
     var documentoCliente = $(this).attr("documentoCliente");
@@ -338,7 +354,9 @@ $(".tablaBuscarClientes").on("click", ".btnBuscarCliente2", function(){
     $("#tipoCliente").val(tipoCLiente);
     importeTotal = parseInt($("#totalVenta").val());
 
-     if(importeTotal ==0){
+    $("#btnBuscarNombreClienteFc").attr('disabled',true);
+
+    if(importeTotal ==0){
       
 
       $("#guardarVenta").attr('disabled',true);
@@ -346,7 +364,9 @@ $(".tablaBuscarClientes").on("click", ".btnBuscarCliente2", function(){
     }else{
 
       $("#guardarVenta").attr('disabled',false);
+
     }
+     mostrarDatos()
 })
 
 /*=============================================
@@ -365,48 +385,128 @@ $(".tablaBuscarClientes").on("click", ".btnBuscarDelegacion", function(){
     $("#documentoCliente").val(documentoCliente);
     $("#tipoDocumento").val(tipoDocumento);
     $("#tipoCliente").val(tipoCLiente);
+    $("#categoria").val('delegacion');
+    $("#btnBuscarNombreClienteFc").attr('disabled',true);
+    mostrarDatos()
+})
+
+$('#myModalProductos').on('hidden.bs.modal', function (event) {
+  // do something...
+  // $('#buscararticulotabla').DataTable().destroy();
 })
 
 
-var tablaArticulo = $('#buscararticulotabla').DataTable({
-      "lengthMenu": [[4, 10, 25], [4, 10, 25]],
-      "language": {
-        "emptyTable":     "No hay datos disponibles en la tabla.",
-        "info":           "Del _START_ al _END_ de _TOTAL_ ",
-        "infoEmpty":      "Mostrando 0 registros de un total de 0.",
-        "infoFiltered":     "6",
-        "infoPostFix":      "(actualizados)",
-        "lengthMenu":     "Mostrar _MENU_ registros",
-        "loadingRecords":   "Cargando...",
-        "processing":     "Procesando...",
-        "search":       "Buscar:",
-        "searchPlaceholder":  "Dato para buscar",
-        "zeroRecords":      "No se han encontrado coincidencias.",
-        "paginate": {
-          "first":      "Primera",
-          "last":       "Última",
-          "next":       "Siguiente",
-          "previous":     "Anterior"
-        },
-        "aria": {
-          "sortAscending":  "Ordenación ascendente",
-          "sortDescending": "Ordenación descendente"
-        }
-      },
+function mostrarDatos(){
+
+  let tipo = $("#tipoCliente").val();
+  let categoria = $("#categoria").val();
+
+  switch ($("#tipoCliente").val()) {
+    
+    case 'casual':
+
+      $("#msgCategoria").html(`Cliente ingresado por DNI (${tipo})`);
+      break;
+
+    case 'clientes':
       
+      $("#msgCategoria").html(`Cliente de la BD (${tipo})`);
+      break;
+
+    case 'consumidorfinal':
+
+      $("#msgCategoria").html(`Consumidor Final`);
+      break;
+
+    case 'escribanos':
       
-    });
+      $("#msgCategoria").html(`ESCRIBANO Cat. ${categoria}`);
+      break;
+    
+      case 'delegacion':
+      
+        $("#msgCategoria").html(`Remitos - ${categoria}`);
+        
+        $("#headPanel").css("backgroundColor",'#343a40');
+        // $("#headPanel").attr('style', 'border-color: #343a40 !important')
+
+        $("#headPanel").css("borderColor",'#343a40');
+        $("#headPanel").children('h4').html("Datos del Remito")
+        $("#headPanelItems").css("backgroundColor",'#343a40');
+        $("#headPanelItems").css("borderTopColor",'#343a40');
+        $("#headPanel").children('h4').css("color","#ffc107")
+       
+        $('#reiniciar').attr('style', 'background-color: #ffc107 !important;color: #343a40 !important')
+        // $('#reiniciar').attr('style', 'color: #343a40 !important')
+      
+      break;
+  
+    
+  }
+  
+}
 
 /*=============================================
 HACER FOCO EN EL PRODUCTOS
 =============================================*/
 $('#myModalProductos').on('shown.bs.modal', function () {
-    
-    $('#buscararticulotabla_filter label input').focus();
-    $('#buscararticulotabla_filter label input').val('');
-    tablaArticulo.search('');
-    tablaArticulo.draw();
   
+  var tablaArticulo = $('#buscararticulotabla').DataTable({
+    destroy: true,
+    'ajax' : {
+      'url' : 'ajax/tablaProductos.ajax.php',
+      'data' : { 'tipoCliente' : $("#tipoCliente").val() , 'categoria': $("#categoria").val()},
+      'type' : 'post'
+  },
+    
+     "lengthMenu": [[4, 10, 25], [4, 10, 25]],
+     "language": {
+       "emptyTable":     "No hay datos disponibles en la tabla.",
+       "info":           "Del _START_ al _END_ de _TOTAL_ ",
+       "infoEmpty":      "Mostrando 0 registros de un total de 0.",
+       "infoFiltered":     "6",
+       "infoPostFix":      "(actualizados)",
+       "lengthMenu":     "Mostrar _MENU_ registros",
+       "loadingRecords":   "Cargando...",
+       "processing":     "Procesando...",
+       "search":       "Buscar:",
+       "searchPlaceholder":  "Dato para buscar",
+       "zeroRecords":      "No se han encontrado coincidencias.",
+       "paginate": {
+         "first":      "Primera",
+         "last":       "Última",
+         "next":       "Siguiente",
+         "previous":     "Anterior"
+       },
+       "aria": {
+         "sortAscending":  "Ordenación ascendente",
+         "sortDescending": "Ordenación descendente"
+       }
+     },
+     
+     
+   });
+    
+  $('#buscararticulotabla_filter label input').focus();
+  $('#buscararticulotabla_filter label input').val('');
+  tablaArticulo.search('');
+  tablaArticulo.draw();
+
+
+     
+    $("#datos_ajax").show();
+    //MUESTRO LOS RESULTADOS
+     $("#contenido_producto").show();
+     //ESCONDO EL PRODUCTO SELECCIONADO
+     $("#contenidoSeleccionado").hide();
+     //PONGO A CERO LOS VALUES
+     $("#idproducto").val("");
+     $("#nombreProducto").val("");
+     $("#cantidadProducto").val("1");
+     $("#precioProducto").val("");
+  
+
+
 })
 
 $('#modalEscribanos').on('shown.bs.modal', function () {
@@ -445,6 +545,9 @@ $('#modalClienteDni').on('shown.bs.modal', function () {
     $("#tipoDocumento").val(tipoDocumentoEventual);
     $("#modalClienteDni").modal('hide');
     $("#tipoCliente").val('casual');
+    $(".btnBuscarCliente").attr('disabled',true);
+
+    mostrarDatos()
   })
 /*=============================================
 FACTURA ELECTRONICA
@@ -452,70 +555,132 @@ FACTURA ELECTRONICA
 $("#guardarVenta").on("click",function(){
     
   $("#guardarVenta").attr('disabled','disabled');
- 
-  var idUltimaFactura=0;
-  var codigoUltimaFactura=0;
-  var datos = new FormData();
-  datos.append("sinHomologacion",1 );
-  datos.append("listaProductos", $('#listaProductos').val());
-  datos.append("idVendedor", $('#idVendedor').val());
-  datos.append("nombreCliente",$("#nombreCliente").val());
-  datos.append("seleccionarCliente", $('#seleccionarCliente').val());
-  datos.append("documentoCliente",$("#documentoCliente").val());
-  datos.append("tipoCliente",$("#tipoCliente").val());
-  datos.append("tipoDocumento",$("#tipoDocumento").val());
+  if($("#tipoCliente").val()=="delegacion"){
+    var idUltimaFactura=0;
+    var codigoUltimaFactura=0;
+    var datos = new FormData();
+    datos.append("remito",1 );
+    datos.append("listaProductos", $('#listaProductos').val());
+    datos.append("idVendedor", $('#idVendedor').val());
+    datos.append("nombreCliente",$("#nombreCliente").val());
+    datos.append("seleccionarCliente", $('#seleccionarCliente').val());
+    datos.append("documentoCliente",$("#documentoCliente").val());
+    datos.append("tipoCliente",$("#tipoCliente").val());
+    datos.append("tipoDocumento",$("#tipoDocumento").val());
+    datos.append("listaMetodoPago", $('#listaMetodoPago').val());
+    datos.append("nuevaReferencia", $('#nuevaReferencia').val());
+    datos.append("totalVenta", $('#totalVenta').val());
+    datos.append("nuevoPrecioImpuesto", $('#nuevoPrecioImpuesto').val());
+    datos.append("nuevoPrecioNeto", $('#nuevoPrecioNeto').val());
+    datos.append("nuevoTotalVentas", $('#nuevoTotalVentas').val());
+    datos.append("categoria", $('#categoria').val());
+    datos.append("tipoFc", 'FC');
+     //CREAMOS LA FACTURA
+    $.ajax({
+      url:"ajax/crearventa.ajax.php",
+      method: "POST",
+      data: datos,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success:function(respuesta){
+        ultimoRemito = 'ultimoRemito';
+        var datos = new FormData();
+        datos.append("ultimoRemito",ultimoRemito);
+        $.ajax({
+
+          url:"ajax/remitos.ajax.php",
+          method: "POST",
+          data: datos,
+          cache: false,
+          contentType: false,
+          processData: false,
+          dataType:"json",
+          
+          success:function(respuestaUltimaFactura2){
+            
+            idUltimaFactura=respuestaUltimaFactura2["id"];
+            
+            codigoUltimaFactura=respuestaUltimaFactura2["codigo"];
+            
+            window.open("extensiones/tcpdf/pdf/remito.php?id="+idUltimaFactura ,"REMITO",1,2);
+            $('#modalLoader').modal('hide');
+            window.location = "remitos";
+            
+          }  
+        })
+      }
+
+    })
+
+    
+  }else{
+
+    var idUltimaFactura=0;
+    var codigoUltimaFactura=0;
+    var datos = new FormData();
+    datos.append("sinHomologacion",1 );
+    datos.append("listaProductos", $('#listaProductos').val());
+    datos.append("idVendedor", $('#idVendedor').val());
+    datos.append("nombreCliente",$("#nombreCliente").val());
+    datos.append("seleccionarCliente", $('#seleccionarCliente').val());
+    datos.append("documentoCliente",$("#documentoCliente").val());
+    datos.append("tipoCliente",$("#tipoCliente").val());
+    datos.append("tipoDocumento",$("#tipoDocumento").val());
+    datos.append("listaMetodoPago", $('#listaMetodoPago').val());
+    datos.append("nuevaReferencia", $('#nuevaReferencia').val());
+    datos.append("totalVenta", $('#totalVenta').val());
+    datos.append("nuevoPrecioImpuesto", $('#nuevoPrecioImpuesto').val());
+    datos.append("nuevoPrecioNeto", $('#nuevoPrecioNeto').val());
+    datos.append("nuevoTotalVentas", $('#nuevoTotalVentas').val());
+    datos.append("categoria", $('#categoria').val());
+    datos.append("tipoFc", 'FC');
   
-  datos.append("listaMetodoPago", $('#listaMetodoPago').val());
-  datos.append("nuevaReferencia", $('#nuevaReferencia').val());
-  datos.append("totalVenta", $('#totalVenta').val());
-  datos.append("nuevoPrecioImpuesto", $('#nuevoPrecioImpuesto').val());
-  datos.append("nuevoPrecioNeto", $('#nuevoPrecioNeto').val());
-  datos.append("nuevoTotalVentas", $('#nuevoTotalVentas').val());
-  datos.append("tipoFc", 'FC');
+    //CREAMOS LA FACTURA
+    $.ajax({
+      url:"ajax/crearventa.ajax.php",
+      method: "POST",
+      data: datos,
+      cache: false,
+      contentType: false,
+      processData: false,
+      
+      success:function(respuestaSinHomologacion){
+        console.log("respuestaSinHomologacion", respuestaSinHomologacion);
+          
+        ultimaFactura = 'ultimaFactura';
+        var datos = new FormData();
+        datos.append("ultimaFactura",ultimaFactura);
+        $.ajax({
+
+          url:"ajax/crearventa.ajax.php",
+          method: "POST",
+          data: datos,
+          cache: false,
+          contentType: false,
+          processData: false,
+          dataType:"json",
+            
+          success:function(respuestaUltimaFactura){
+            
+            
+            idUltimaFactura=respuestaUltimaFactura["id"];
+            codigoUltimaFactura=respuestaUltimaFactura["codigo"];
+            
+            
+            window.location = "index.php?ruta=ventas&id="+idUltimaFactura;
+            
+          } 
+
+        })
+          
+      }
+
+    })//fin ajax
+
+
+  }//fin de if
   
-  
-  //CREAMOS LA FACTURA
-  $.ajax({
-    url:"ajax/crearventa.ajax.php",
-    method: "POST",
-    data: datos,
-    cache: false,
-    contentType: false,
-    processData: false,
-     
-    success:function(respuestaSinHomologacion){
-      console.log("respuestaSinHomologacion", respuestaSinHomologacion);
-        
-      ultimaFactura = 'ultimaFactura';
-      var datos = new FormData();
-      datos.append("ultimaFactura",ultimaFactura);
-      $.ajax({
-
-        url:"ajax/crearventa.ajax.php",
-        method: "POST",
-        data: datos,
-        cache: false,
-        contentType: false,
-        processData: false,
-        dataType:"json",
-          
-        success:function(respuestaUltimaFactura){
-          
-          
-          idUltimaFactura=respuestaUltimaFactura["id"];
-          codigoUltimaFactura=respuestaUltimaFactura["codigo"];
-          
-          
-          window.location = "index.php?ruta=ventas&id="+idUltimaFactura;
-          
-        } 
-
-      })
-        
-    }
-
-  })
-
  
 })
 
@@ -544,10 +709,7 @@ $("#frmVenta").on("submit", function(){
     
   }
  
-
-  
- })
-
+})
 
 /*=============================================
 SELECCIONO EL PRODUCTO
@@ -584,20 +746,7 @@ $(".tablaBuscarProductos").on("click", ".btnSeleccionarProducto", function(){
 /*=============================================
 CUANDO ABRO EL MODAL DE PRODUCTOS
 =============================================*/
-$('#myModalProductos').on('shown.bs.modal', function () {
-     
-     $("#datos_ajax").show();
-     //MUESTRO LOS RESULTADOS
-      $("#contenido_producto").show();
-      //ESCONDO EL PRODUCTO SELECCIONADO
-      $("#contenidoSeleccionado").hide();
-      //PONGO A CERO LOS VALUES
-      $("#idproducto").val("");
-      $("#nombreProducto").val("");
-      $("#cantidadProducto").val("1");
-      $("#precioProducto").val("");
-   
-})
+
 
 
  //Date picker
@@ -771,14 +920,14 @@ function listarProductos(){
     }else{
 
       $("#guardarVenta").attr('disabled',false);
+
     }
+
   }else{
 
     $("#guardarVenta").attr('disabled',true);
 
   }
-  
-
 
  $("#totalVentasMostrar").html(' $ '+totalVentas.toFixed(2)); 
  $("#totalVenta").val(totalVentas.toFixed(2)); 
@@ -787,12 +936,7 @@ function listarProductos(){
  iniciarComprobantes();
 
 
-    
-
 }
-
-
-
 
 /*=============================================
 CAMBIAR REFERENCIA DE PAGO
