@@ -107,6 +107,43 @@ class AjaxCrearVenta{
 			$adeuda=0;
 
 			$fechapago = $fecha;
+
+			$caja = ControladorCaja::ctrMostrarCaja($item, $valor);
+		         
+		          
+		          $efectivo = $caja[0]['efectivo'];
+		          $tarjeta = $caja[0]['tarjeta'];
+		          $cheque = $caja[0]['cheque'];
+		          $transferencia = $caja[0]['transferencia'];
+
+		          switch ($_POST["listaMetodoPago"]) {
+		          	case 'EFECTIVO':
+		          		# code...
+		          		$efectivo = $efectivo + $_POST["totalVenta"];
+		          		break;
+		          	case 'TARJETA':
+		          		# code...
+		          		$tarjeta = $tarjeta + $_POST["totalVenta"];
+		          		break;
+		          	case 'CHEQUE':
+		          		# code...
+		          		$cheque = $cheque + $_POST["totalVenta"];
+		          		break;
+		          	case 'TRANSFERENCIA':
+		          		# code...
+		          		$transferencia = $transferencia + $_POST["totalVenta"];
+		          		break;
+		          }
+		          
+
+		          $datos = array("fecha"=>date('Y-m-d'),
+		          
+					             "efectivo"=>$efectivo,
+					             "tarjeta"=>$tarjeta,
+					             "cheque"=>$cheque,
+					             "transferencia"=>$transferencia);
+		          
+		          $caja = ControladorCaja::ctrEditarCaja($item, $datos);
 		}
 		
 		$tabla = 'ventas';

@@ -554,7 +554,8 @@ FACTURA ELECTRONICA
 =============================================*/
 $("#guardarVenta").on("click",function(){
     
-  $("#guardarVenta").attr('disabled','disabled');
+  $("#guardarVenta").attr('disabled','disabled')
+  
   if($("#tipoCliente").val()=="delegacion"){
     var idUltimaFactura=0;
     var codigoUltimaFactura=0;

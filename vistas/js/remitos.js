@@ -1,3 +1,13 @@
+$(".tablas").on("click", ".btnEditarPagoRemito", function(){
+
+	let idVenta = $(this).attr("idVenta")
+	let adeuda = $(this).attr("adeuda")
+
+	$("#idVentaPago").val(idVenta)
+	$("#totalVentaPago").val(adeuda)
+})
+
+
 /*=============================================
 BOTON VER  VENTA
 =============================================*/
