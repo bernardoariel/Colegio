@@ -907,7 +907,7 @@ class ModeloVentas{
 
 	static public function mdlRealizarPagoVenta($tabla,$datos){
 
-		
+		echo '<center><pre>'; print_r($datos); echo '</pre></center>';
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET  metodo_pago = :metodo_pago,referenciapago =:referenciapago,fechapago =:fechapago, adeuda =:adeuda WHERE id =:id");
 
 

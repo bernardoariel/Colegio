@@ -264,6 +264,7 @@ static public function ctrUltimoIdRemito(){
 
 		if(isset($_POST["idVentaPago"])){
 
+			// echo '<center><pre>'; print_r($_POST); echo '</pre></center>';
 			$tabla = "remitos";
 
 			$datos = array("id"=>$_POST['idVentaPago'],
@@ -273,6 +274,7 @@ static public function ctrUltimoIdRemito(){
 						   "adeuda"=>0);
 
 			$respuesta = ModeloVentas::mdlRealizarPagoVenta($tabla, $datos);//REUTILIZO EL CODIGO DE VENTAS PERO CON LA TABLA REMITO
+			// echo '<center><pre>'; print_r($respuesta); echo '</pre></center>';
 
 			if($respuesta == "ok"){
 

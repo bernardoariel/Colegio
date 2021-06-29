@@ -40,13 +40,7 @@
 
         </a>
 
-<!--          <button type="button" class="btn btn-default pull-right" id="daterange-btn">
-           <span>
-             <i class="fa fa-calendar"></i> Rango de Fecha
-           </span>
-           
-           <i class="fa fa-caret-down"></i>
-         </button> -->
+
 
       </div>
 
@@ -140,7 +134,7 @@
 
                                   }else{
 
-                                    echo '<button class="btn btn-primary btnEditarPagoRemito" idVenta="'.$value["id"].'" title="realizar un pago"  data-toggle="modal" data-target="#modalAgregarPagoRemito"><i class="fa fa-money"></i></button>';
+                                    echo '<button class="btn btn-primary btnEditarPagoRemito" idVenta="'.$value["id"].'" adeuda="'.$value["adeuda"].'" title="realizar un pago"  data-toggle="modal" data-target="#modalAgregarPagoRemito"><i class="fa fa-money"></i></button>';
 
                          }
 
@@ -169,6 +163,8 @@
 
       $eliminarPago = new ControladorVentas();
       $eliminarPago -> ctrEliminarPago();
+
+
 
       ?>
        
@@ -329,8 +325,8 @@
 
         <div class="modal-body">
 
-            <input type="hidden" id="idVentaPago" name="idVentaPago" value="13"> 
-            <input type="hidden" id="totalVentaPago" name="totalVentaPago" value="13">
+            <input type="hidden" id="idVentaPago" name="idVentaPago" value=""> 
+            <input type="hidden" id="totalVentaPago" name="totalVentaPago" value="">
             <label for="pago">PAGO</label>
 
             <select class="form-control" id='listaMetodoPago' name='listaMetodoPago'>

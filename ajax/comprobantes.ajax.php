@@ -79,7 +79,6 @@ class AjaxComprobantes{
 		$valor = null;
 		$respuesta = ControladorComprobantes::ctrIniciarItems($item, $valor);
 
-		
 
 	}
 

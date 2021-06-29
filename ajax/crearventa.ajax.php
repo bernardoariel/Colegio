@@ -61,6 +61,16 @@ class AjaxCrearVenta{
 		echo json_encode($respuesta);
 
 	}
+
+	/*=============================================
+	REMITOS
+	=============================================*/	
+	public function ajaxRemito(){
+
+		$respuesta = ControladorRemitos::ctrCrearRemito();
+		return $respuesta;
+
+	}
 	
 	/*=============================================
 	FACTURA SIN HOMOLOGACION
@@ -97,6 +107,43 @@ class AjaxCrearVenta{
 			$adeuda=0;
 
 			$fechapago = $fecha;
+
+			$caja = ControladorCaja::ctrMostrarCaja($item, $valor);
+		         
+		          
+		          $efectivo = $caja[0]['efectivo'];
+		          $tarjeta = $caja[0]['tarjeta'];
+		          $cheque = $caja[0]['cheque'];
+		          $transferencia = $caja[0]['transferencia'];
+
+		          switch ($_POST["listaMetodoPago"]) {
+		          	case 'EFECTIVO':
+		          		# code...
+		          		$efectivo = $efectivo + $_POST["totalVenta"];
+		          		break;
+		          	case 'TARJETA':
+		          		# code...
+		          		$tarjeta = $tarjeta + $_POST["totalVenta"];
+		          		break;
+		          	case 'CHEQUE':
+		          		# code...
+		          		$cheque = $cheque + $_POST["totalVenta"];
+		          		break;
+		          	case 'TRANSFERENCIA':
+		          		# code...
+		          		$transferencia = $transferencia + $_POST["totalVenta"];
+		          		break;
+		          }
+		          
+
+		          $datos = array("fecha"=>date('Y-m-d'),
+		          
+					             "efectivo"=>$efectivo,
+					             "tarjeta"=>$tarjeta,
+					             "cheque"=>$cheque,
+					             "transferencia"=>$transferencia);
+		          
+		          $caja = ControladorCaja::ctrEditarCaja($item, $datos);
 		}
 		
 		$tabla = 'ventas';
@@ -174,8 +221,8 @@ class AjaxCrearVenta{
 
 		if(isset( $_POST['idVentaNro'])){
 			
-			$respuesta2=  ModeloCuotas::mdlEliminarVenta("cuotas", $_POST["idVentaNro"]);
-			echo '<center><pre>'; print_r($respuesta2 . ' '.$_POST["idVentaNro"]); echo '</pre></center>';
+			ModeloCuotas::mdlEliminarVenta("cuotas", $_POST["idVentaNro"]);
+			// echo '<center><pre>'; print_r($respuesta2 . ' '.$_POST["idVentaNro"]); echo '</pre></center>';
 		}
 		
 	}
@@ -328,5 +375,13 @@ if(isset($_POST["idVentaHomologacion"])){
 
 	$nuevaVenta = new AjaxCrearVenta();
 	$nuevaVenta -> ajaxHomogacionVenta();
+
+}
+
+if(isset($_POST["remito"])){
+
+
+	$nuevaVenta = new AjaxCrearVenta();
+	$nuevaVenta -> ajaxRemito();
 
 }
