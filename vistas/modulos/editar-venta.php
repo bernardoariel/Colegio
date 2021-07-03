@@ -134,6 +134,10 @@ switch ($cantCabeza) {
                   <input type='hidden' id='seleccionarCliente' name='seleccionarCliente' value="<?php echo $cliente['id'];?>">
 
                   <input type="text" class="form-control" placeholder="NOMBRE...." id='nombrecliente' name='nombreCliente' value="<?php echo $cliente['nombre'];?>" autocomplete="off"   readonly  style="margin-top: 5px">
+
+                 
+                  
+                  <input type='hidden' id='categoria' name='categoria' value="SinCategoria">
                   
                   <?php 
 
